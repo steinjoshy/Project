@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance - Smart Attendance System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 20px; color: #333;">Attendance Records</h2>
+    
+    <form method="GET" action="{{ url_for('attendance') }}" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+        <label for="date" style="font-weight: 500;">Select Date:</label>
+        <input type="date" id="date" name="date" value="{{ selected_date if selected_date != 'All' else '' }}" 
+               style="padding: 8px; border: 2px solid #ddd; border-radius: 5px;">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{{ url_for('attendance') }}" class="btn" style="background: #6c757d; color: white;">View All</a>
+        <a href="{{ url_for('download', date=selected_date if selected_date != 'All' else '') }}" 
+           class="btn btn-success">Download CSV</a>
+    </form>
+    
+    {% if attendance %}
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Student ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance %}
+                <tr>
+                    <td>{{ record[0] }}</td>
+                    <td>{{ record[5] if record|length >= 6 else 'N/A' }}</td>
+                    <td>{{ record[1] }}</td>
+                    <td>{{ record[2] }}</td>
+                    <td>{{ record[3] }}</td>
+                    <td><span style="color: #28a745; font-weight: bold;">{{ record[4] }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p style="margin-top: 20px; color: #666;">Total records: <strong>{{ attendance|length }}</strong></p>
+    {% else %}
+    <p style="color: #666; text-align: center; padding: 40px;">No attendance records found.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
